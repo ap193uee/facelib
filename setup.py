@@ -3,7 +3,7 @@ from setuptools import setup
 setup( 
     name='face',
     
-    version='0.1',
+    version='0.11',
     description='Face detection and recognition',
     url='http://demo.vedalabs.in/',
 
@@ -14,6 +14,9 @@ setup(
     license='Commercial',
 
     packages=['face'],
+    package_data={
+        'face':['models/*'],
+    },
     
     install_requires=['dlib'],
     zip_safe=False
