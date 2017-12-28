@@ -7,34 +7,25 @@ WORK_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = 'models'
 
 def draw_rects(img, faces):
+    """
+    Draws rectangle around detected faces.
+    Arguments:
+        img: image in numpy array on which the rectangles are to be drawn
+        faces: list of faces in a format given in Face Class
+    Returns:
+        img: image in numpy array format with drawn rectangles
+    """
     for face in faces:
         x1, y1, x2, y2 = face['box']['topleft']['x'], face['box']['topleft']['y'], face['box']['bottomright']['x'], face['box']['bottomright']['y'] 
         cv2.rectangle(img, (x1, y1), (x2, y2), (0,255,0), 2)
     return img
    
 
-class FaceDetector(object):
-    """
-    A face detector interface class implementing different face detection algorithms.
-    """
-    def __init__(self, method='opencv', model=None):
-        if method == 'dlib':
-            self._detector = FaceDetectorDlib()
-        elif method == 'cnn':
-            self._detector = FaceDetectorCNN(model)
-        elif method == 'yolo':
-            self._detector = FaceDetectorYolo()
-        else:
-            self._detector = FaceDetectorOpenCV(model) 
-
-    def run(self, imgcv, **kwargs):
-        return self._detector.run(imgcv, **kwargs)
-
 class FaceDetectorOpenCV(object):
     """
     A face detector based on OpenCV Cascade Classifier on Haar features.
     """
-    def __init__(self, model_loc, min_height_thresh=30, min_width_thresh=30):
+    def __init__(self, model_loc=None, min_height_thresh=30, min_width_thresh=30):
         if model_loc is None:
             model_name ='haarcascade_frontalface_alt2.xml'
             model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
@@ -42,10 +33,13 @@ class FaceDetectorOpenCV(object):
         self.min_w = min_width_thresh
         self.face_cascade = cv2.CascadeClassifier(model_loc)
 
-    def run(self, imgcv, **kwargs):
+    def detect_raw(self, imgcv, **kwargs):
         if len(imgcv.shape) > 2:
             imgcv = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(imgcv, 1.3, minNeighbors=5, minSize=(self.min_h, self.min_w))
+        return self.face_cascade.detectMultiScale(imgcv, 1.3, minNeighbors=5, minSize=(self.min_h, self.min_w))
+
+    def detect(self, imgcv, **kwargs):
+        faces = self.detect_raw(imgcv, **kwargs)
         return self._format_result(faces)
 
     # Format the results
@@ -70,13 +64,15 @@ class FaceDetectorDlib(object):
     def __init__(self):
         import dlib
         self._detector = dlib.get_frontal_face_detector()
-        # self.predictor = dlib.shape_predictor(model_name)
 
-    def run(self, imgcv, **kwargs):
+    def detect_raw(self, imgcv, **kwargs):
         upsamples = kwargs.get('upsamples', 1)
         if len(imgcv.shape) > 2:
             imgcv = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
-        faces = self._detector(imgcv, upsamples)
+        return self._detector(imgcv, upsamples)
+
+    def detect(self, imgcv, **kwargs):
+        faces = self.detect_raw(imgcv, **kwargs)
         return self._format_result(faces)
 
     # Format the results
@@ -96,16 +92,19 @@ class FaceDetectorDlib(object):
 
 class FaceDetectorCNN(object):
     """A face detector based on dlib CNN model."""
-    def __init__(self, model_loc):
+    def __init__(self, model_loc=None):
         import dlib
         if not model_loc:
             model_name = 'mmod_human_face_detector.dat'
             model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
         self._detector = dlib.cnn_face_detection_model_v1(model_loc)
 
-    def run(self, imgcv, **kwargs):
+    def detect(self, imgcv, **kwargs):
         upsamples = kwargs.get('upsamples', 1)
-        faces = self._detector(imgcv, upsamples)
+        return self._detector(imgcv, upsamples)
+
+    def detect(self, imgcv, **kwargs):
+        faces = self.detect_raw(imgcv, **kwargs)
         return self._format_result(faces)
         
     # Format the results
@@ -129,8 +128,11 @@ class FaceDetectorYolo(object):
         model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
         self._detector = PersonDetectorYOLOTiny(model_loc)
 
-    def run(self, imgcv, **kwargs):
-        faces = self._detector.run(imgcv)
+    def detect(self, imgcv, **kwargs):
+        return self._detector.run(imgcv)
+
+    def detect(self, imgcv, **kwargs):
+        faces = self.detect_raw(imgcv, **kwargs)
         return self._format_result(faces)
 
     # Format the results
@@ -149,14 +151,13 @@ class FaceDetectorYolo(object):
 
 
 if __name__ == '__main__':
-    print FaceDetector.__doc__
     import sys, pprint
 
-    detector = FaceDetector(method='dlib')
+    detector = FaceDetectorOpenCV()
     image_url = 'test.png' if len(sys.argv) < 2 else sys.argv[1]
     imgcv = cv2.imread(image_url)
     if imgcv is not None:
-        results = detector.run(imgcv)
+        results = detector.detect(imgcv)
         pprint.pprint(results)
         cv2.imshow('Faces', draw_rects(imgcv, results))
         cv2.waitKey(0)

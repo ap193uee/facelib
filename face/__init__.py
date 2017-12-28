@@ -1,1 +1,1 @@
-from detect_face import FaceDetector
+from face import Face

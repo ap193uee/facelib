@@ -13,13 +13,20 @@ A face detector interface class implementing different face detection algorithms
 
 * dlib
 * opencv
+* numpy
+* cudnn (for gpu supoort for cnn methods)
 
 ### How to use ###
 
     import face, cv2
-    detector = face.FaceDetector(method='dlib')
-    image_url = 'test.png'
-    imgcv = cv2.imread(image_url)
-    if imgcv is not None:
-        results = detector.run(imgcv)
+    facedemo = Face(detector_method='dlib')
+
+    image_url1 = 'test.png'
+    image_url2 = 'test2.png'
+    
+    imgcv1 = cv2.imread(image_url1)
+    imgcv2 = cv2.imread(image_url2)
+
+    if imgcv1 is not None and imgcv2 is not None:
+        results = facedemo.compare(imgcv1, imgcv2)
         print results
