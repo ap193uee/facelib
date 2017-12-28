@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from .detect_face import *
-from .face_rec import *
+from detect_face import *
+from face_rec import *
 import dlib, os
 
 WORK_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -64,8 +64,7 @@ class Face(object):
     def detect_largest(self, imgcv, **kwargs):
         faces = self.detect(imgcv, **kwargs)
         if len(faces) > 0:
-            out = max(faces, key=lambda rect: size_bbox(rect['box'])[-1])
-            return [out]
+            return max(faces, key=lambda rect: size_bbox(rect['box'])[-1])
 
 
     def get_landmarks(self, imgcv, face_locations=None):
@@ -86,10 +85,20 @@ class Face(object):
 
 
     def compare(self, face_image1, face_image2, tolerance=0.6):
-        encodings = self.get_encodings(face_image1, self.get_landmarks(face_image1, self.detect_largest(face_image1)))
-        encoding = self.get_encodings(face_image2, self.get_landmarks(face_image2, self.detect_largest(face_image2)))
+        face1 = self.detect_largest(face_image1)
+        encodings = self.get_encodings(face_image1, self.get_landmarks(face_image1, [face1]))
+
+        face2 = self.detect_largest(face_image2)
+        encoding = self.get_encodings(face_image2, self.get_landmarks(face_image2, [face2]))
+        
         dist = self.get_distance(encodings, encoding[0])[0]
-        return dist <= tolerance, dist 
+        return {
+                "face1":face1,
+                "face2":face2,
+                "isMatched":dist <= tolerance,
+                "matchingConfidence":(tolerance-dist/2)*100/tolerance if dist<2*tolerance else 0.0,
+                "threshold":tolerance,
+                }
 
 
 if __name__ == '__main__':
