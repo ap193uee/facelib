@@ -1,13 +1,13 @@
 # README #
 
-A face detector interface class implementing different face detection algorithms.
+A face interface class implementing different face detection, alignment and recognition algorithms.
 
 ### Algorithms Implemented ###
 
-* Dlib Face Detector (method='dlib')
-* Dlib CNN Face Detector (method='cnn')
-* OpenCV Face Detector (method='opencv')
-* Neural Network
+* Dlib Face Detector (detector_method='dlib')
+* Dlib CNN Face Detector (detector_method='cnn')
+* OpenCV Face Detector (detector_method='opencv')
+* Dlib Face Recognition (recognition_method='dlib')
 
 ### Requirements ###
 
