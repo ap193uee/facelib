@@ -87,26 +87,18 @@ class Face(object):
     def compare(self, face_image1, face_image2, tolerance=0.6):
         face1 = self.detect_largest(face_image1)
         face2 = self.detect_largest(face_image2)
-
-        if face1 is None:
-            return {"Error":1,
-                    "Description":"No face found in image1"
+        results = {
+                    "face1":face1,
+                    "face2":face2,
+                    "threshold":tolerance
                     }
-        elif face2 is None:
-            return {"Error":2,
-                    "Description":"No face found in image2"
-                    }
-        else:
+        if face1 is not None and face2 is not None:
             encodings = self.get_encodings(face_image1, self.get_landmarks(face_image1, [face1]))
             encoding = self.get_encodings(face_image2, self.get_landmarks(face_image2, [face2]))
             dist = self.get_distance(encodings, encoding[0])[0]
-            return {
-                    "face1":face1,
-                    "face2":face2,
-                    "isMatched":dist <= tolerance,
-                    "matchingConfidence":(tolerance-dist/2)*100/tolerance if dist<2*tolerance else 0.0,
-                    "threshold":tolerance,
-                    }
+            results["isMatched"] = dist <= tolerance
+            results["matchingConfidence"] = (tolerance-dist/2)*100/tolerance if dist<2*tolerance else 0.0
+        return results
 
 
 if __name__ == '__main__':
