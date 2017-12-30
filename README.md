@@ -28,7 +28,7 @@ A face interface class implementing different face detection, alignment and reco
 ### How to use ###
 
     import face, cv2
-    facedemo = Face(detector_method='dlib')
+    facedemo = face.Face(detector_method='dlib')
 
     image_url1 = 'test.png'
     image_url2 = 'test2.png'
