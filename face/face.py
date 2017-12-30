@@ -96,7 +96,7 @@ class Face(object):
             encodings = self.get_encodings(face_image1, self.get_landmarks(face_image1, [face1]))
             encoding = self.get_encodings(face_image2, self.get_landmarks(face_image2, [face2]))
             dist = self.get_distance(encodings, encoding[0])[0]
-            results["isMatched"] = dist <= tolerance
+            results["isMatched"] = bool(dist <= tolerance)
             results["matchingConfidence"] = (tolerance-dist/2)*100/tolerance if dist<2*tolerance else 0.0
         return results
 
