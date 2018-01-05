@@ -69,7 +69,8 @@ class FaceDetectorDlib(object):
         upsamples = kwargs.get('upsamples', 1)
         if len(imgcv.shape) > 2:
             imgcv = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
-        return self._detector(imgcv, upsamples)
+        equ = cv2.equalizeHist(imgcv)
+        return self._detector(equ, upsamples)
 
     def detect(self, imgcv, **kwargs):
         faces = self.detect_raw(imgcv, **kwargs)
@@ -153,7 +154,7 @@ class FaceDetectorYolo(object):
 if __name__ == '__main__':
     import sys, pprint
 
-    detector = FaceDetectorOpenCV()
+    detector = FaceDetectorDlib()
     image_url = 'test.png' if len(sys.argv) < 2 else sys.argv[1]
     imgcv = cv2.imread(image_url)
     if imgcv is not None:
