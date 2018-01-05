@@ -3,7 +3,7 @@ from setuptools import setup
 setup( 
     name='face',
     
-    version='0.12',
+    version='0.13',
     description='Face detection and recognition',
     url='http://demo.vedalabs.in/',
 

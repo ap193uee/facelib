@@ -4,10 +4,11 @@ A face interface class implementing different face detection, alignment and reco
 
 ### Algorithms Implemented ###
 
-* Dlib Face Detector (detector_method='dlib')
+* Face Detector (detector_method='dlib')
 * Dlib CNN Face Detector (detector_method='cnn')
 * OpenCV Face Detector (detector_method='opencv')
 * Dlib Face Recognition (recognition_method='dlib')
+* Dlib Facial Landmarks (predictor_model='small' for 5 face landmarks)
 
 ### Requirements ###
 
@@ -19,7 +20,7 @@ A face interface class implementing different face detection, alignment and reco
 ### Installation ###
 
     sudo apt-get install libboost-all-dev libopenblas-dev liblapacke-dev cmake build-essential
-    sudo apt-get install python-dev python-pip python-opencv
+    sudo apt-get install python-dev python-pip python-opencv python-setuptools #python-opencv
 
     pip install --user git+<https-url>
     or
