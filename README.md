@@ -18,14 +18,14 @@ A face interface class implementing different face detection, alignment and reco
 * cudnn (for gpu supoort for cnn methods)
 
 ### Installation ###
-
+```sh
     sudo apt-get install libboost-all-dev libopenblas-dev liblapacke-dev cmake build-essential
     sudo apt-get install python-dev python-pip python-opencv python-setuptools #python-opencv
 
     pip install --user git+<https-url>
     or
     pip install --user git+ssh://<ssh-url>
-
+```
 ### How to use ###
 
     import face, cv2
