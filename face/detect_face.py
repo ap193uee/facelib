@@ -99,7 +99,7 @@ class FaceDetectorCNN(object):
             model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
         self._detector = dlib.cnn_face_detection_model_v1(model_loc)
 
-    def detect(self, imgcv, **kwargs):
+    def detect_raw(self, imgcv, **kwargs):
         upsamples = kwargs.get('upsamples', 1)
         return self._detector(imgcv, upsamples)
 
