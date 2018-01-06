@@ -27,7 +27,7 @@ pip install --user git+<https-url>
 ```
 or
 ```sh
-pip install --user git+ssh://<ssh-url>
+pip install --user git+ssh://git@bitbucket.org/macherlabs/facelib.git
 ```
 ### How to use ###
 
