@@ -50,8 +50,8 @@ class FaceDetectorOpenCV(object):
             formatted_res["class"] = 'face'
             formatted_res["prob"] = 0.99
             formatted_res["box"] = {
-                                    "topleft":{'x':x, 'y':y},
-                                    "bottomright":{'x':x+w, 'y':y+h}
+                                    "topleft":{'x':x.item(), 'y':y.item()},
+                                    "bottomright":{'x':(x+w).item(), 'y':(y+h).item()}
                                     }
             out_list.append(formatted_res)
         return out_list
