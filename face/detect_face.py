@@ -19,7 +19,6 @@ def draw_rects(img, faces):
         x1, y1, x2, y2 = face['box']['topleft']['x'], face['box']['topleft']['y'], face['box']['bottomright']['x'], face['box']['bottomright']['y'] 
         cv2.rectangle(img, (x1, y1), (x2, y2), (0,255,0), 2)
     return img
-   
 
 class FaceDetectorOpenCV(object):
     """
@@ -36,6 +35,7 @@ class FaceDetectorOpenCV(object):
     def detect_raw(self, imgcv, **kwargs):
         if len(imgcv.shape) > 2:
             imgcv = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
+        imgcv = cv2.equalizeHist(imgcv)
         return self.face_cascade.detectMultiScale(imgcv, 1.3, minNeighbors=5, minSize=(self.min_h, self.min_w))
 
     def detect(self, imgcv, **kwargs):
