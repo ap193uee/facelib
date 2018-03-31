@@ -59,7 +59,6 @@ def demo_video(video_file):
     facedemo = Face(detector_method=DETECTOR)
     mtracker = MultiTracker(SingleTrackerType = CorrelationTracker) #, removalConfig=removalConfig)
     # mtracker = MultiTracker(SingleTrackerType = cv2.TrackerKCF_create)   #initialise Multitracker
-    # mtracker = CorrelationTracker()
     cap = common.VideoStream(video_file, queueSize=4).start()
     time.sleep(1)
     Outcount, Incount = 0, 0

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from .detect_face import *
-from .face_rec import *
 import dlib, os
 
 WORK_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -46,11 +45,14 @@ class Face(object):
 
         if predictor_model == 'large':
             pose_predictor = os.path.join(WORK_DIR, MODEL_DIR, 'shape_predictor_68_face_landmarks.dat')
-        else:
+        elif predictor_model == 'small':
             pose_predictor = os.path.join(WORK_DIR, MODEL_DIR, 'shape_predictor_5_face_landmarks.dat')
-        self._predictor = dlib.shape_predictor(pose_predictor)
+        if predictor_model is not None:
+            self._predictor = dlib.shape_predictor(pose_predictor)
 
-        self._recognizer = FaceRecDlib(recognition_model)
+        if predictor_model == 'dlib':
+            from .face_rec import *
+            self._recognizer = FaceRecDlib(recognition_model)
 
 
     def detect(self, imgcv, **kwargs):
