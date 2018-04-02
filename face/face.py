@@ -50,7 +50,7 @@ class Face(object):
         if predictor_model is not None:
             self._predictor = dlib.shape_predictor(pose_predictor)
 
-        if predictor_model == 'dlib':
+        if recognition_method == 'dlib':
             from .face_rec import *
             self._recognizer = FaceRecDlib(recognition_model)
 
