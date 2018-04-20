@@ -11,5 +11,4 @@ pipelines:
         caches:
           - pip
         script: # Modify the commands below to build your repository.
-          - pip install dlib numpy setuptools
-          - python -c "import face, cv2;facedemo = face.Face(detector_method='dlib')"
+          - pip install numpy
