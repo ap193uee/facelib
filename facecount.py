@@ -90,8 +90,8 @@ def demo_video(video_file):
             print Incount, Outcount
             cv2.line(imgcv, (LINE['x1'], LINE['y1']), (LINE['x2'], LINE['y2']),
                      (0, 0, 255), 4)
-            common.drawLabel(imgcv, "IN:%d  OUT:%d" % (Incount, Outcount),
-                             (10, 10), size=1, color=(0, 0, 255))
+            imgcv = common.drawLabel(imgcv, "IN:%d  OUT:%d" % (Incount, Outcount),
+                                     (10, 10), color=(0, 0, 255))
             common.showImage(common.drawObjects(imgcv, detections, ids))
 
         key = cv2.waitKey(1) & 0xFF

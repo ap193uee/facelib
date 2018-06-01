@@ -61,7 +61,7 @@ def demo_video(video_file):
             #         ids.append(tid)
             # detections = to_bbox(cvboxes)
 
-            print detections,
+            print(detections)
             common.showImage(common.drawObjects(imgcv, detections, ids))
 
         key = cv2.waitKey(1) & 0xFF
@@ -72,7 +72,7 @@ def demo_video(video_file):
         dt = t1-t
         t = t1
         total_t += dt
-        print counter/total_t
+        print(counter/total_t)
 
 
 if __name__ == '__main__':

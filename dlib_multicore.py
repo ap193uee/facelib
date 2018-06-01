@@ -51,7 +51,7 @@ if __name__ == '__main__':
             out = multi.run(imgcv)
             if out is not None:
                 frame, detections = out
-                common.showImage(common.draw_faces(frame, detections))
+                common.showImage(common.drawObjects(frame, detections))
 
         t1 = common.clock()
         dt = t1-t
