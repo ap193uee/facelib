@@ -6,6 +6,7 @@ import os
 WORK_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = 'models'
 
+
 def draw_rects(img, faces):
     """
     Draws rectangle around detected faces.
@@ -16,9 +17,11 @@ def draw_rects(img, faces):
         img: image in numpy array format with drawn rectangles
     """
     for face in faces:
-        x1, y1, x2, y2 = face['box']['topleft']['x'], face['box']['topleft']['y'], face['box']['bottomright']['x'], face['box']['bottomright']['y'] 
-        cv2.rectangle(img, (x1, y1), (x2, y2), (0,255,0), 2)
+        x1, y1 = face['box']['topleft']['x'], face['box']['topleft']['y']
+        x2, y2 = face['box']['bottomright']['x'], face['box']['bottomright']['y']
+        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
     return img
+
 
 class FaceDetectorOpenCV(object):
     """
@@ -26,7 +29,7 @@ class FaceDetectorOpenCV(object):
     """
     def __init__(self, model_loc=None, min_height_thresh=30, min_width_thresh=30):
         if model_loc is None:
-            model_name ='haarcascade_frontalface_alt2.xml'
+            model_name = 'haarcascade_frontalface_alt2.xml'
             model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
         self.min_h = min_height_thresh
         self.min_w = min_width_thresh
@@ -36,7 +39,8 @@ class FaceDetectorOpenCV(object):
         if len(imgcv.shape) > 2:
             imgcv = cv2.cvtColor(imgcv, cv2.COLOR_BGR2GRAY)
         imgcv = cv2.equalizeHist(imgcv)
-        return self.face_cascade.detectMultiScale(imgcv, 1.3, minNeighbors=5, minSize=(self.min_h, self.min_w))
+        return self.face_cascade.detectMultiScale(imgcv, 1.3, minNeighbors=5,
+                                                  minSize=(self.min_h, self.min_w))
 
     def detect(self, imgcv, **kwargs):
         faces = self.detect_raw(imgcv, **kwargs)
@@ -50,9 +54,9 @@ class FaceDetectorOpenCV(object):
             formatted_res["class"] = 'face'
             formatted_res["prob"] = 0.99
             formatted_res["box"] = {
-                                    "topleft":{'x':x.item(), 'y':y.item()},
-                                    "bottomright":{'x':(x+w).item(), 'y':(y+h).item()}
-                                    }
+                "topleft": {'x': x.item(), 'y': y.item()},
+                "bottomright": {'x': (x+w).item(), 'y': (y+h).item()}
+                }
             out_list.append(formatted_res)
         return out_list
 
@@ -84,9 +88,9 @@ class FaceDetectorDlib(object):
             formatted_res["class"] = 'face'
             formatted_res["prob"] = 0.99
             formatted_res["box"] = {
-                                    "topleft":{'x':res.left(),'y':res.top()},
-                                    "bottomright":{'x':res.right(),'y':res.bottom()}
-                                    }
+                "topleft": {'x': res.left(), 'y': res.top()},
+                "bottomright": {'x': res.right(), 'y': res.bottom()}
+                }
             out_list.append(formatted_res)
         return out_list
 
@@ -107,7 +111,7 @@ class FaceDetectorCNN(object):
     def detect(self, imgcv, **kwargs):
         faces = self.detect_raw(imgcv, **kwargs)
         return self._format_result(faces)
-        
+
     # Format the results
     def _format_result(self, result):
         out_list = []
@@ -116,9 +120,9 @@ class FaceDetectorCNN(object):
             formatted_res["class"] = 'face'
             formatted_res["prob"] = res.confidence
             formatted_res["box"] = {
-                                    "topleft":{'x':res.rect.left(),'y':res.rect.top()},
-                                    "bottomright":{'x':res.rect.right(),'y':res.rect.bottom()}
-                                    }
+                "topleft": {'x': res.rect.left(), 'y': res.rect.top()},
+                "bottomright": {'x': res.rect.right(), 'y': res.rect.bottom()}
+                }
             out_list.append(formatted_res)
         return out_list
 
@@ -129,7 +133,7 @@ class FaceDetectorYolo(object):
         model_loc = os.path.join(WORK_DIR, MODEL_DIR, model_name)
         self._detector = PersonDetectorYOLOTiny(model_loc)
 
-    def detect(self, imgcv, **kwargs):
+    def detect_raw(self, imgcv, **kwargs):
         return self._detector.run(imgcv)
 
     def detect(self, imgcv, **kwargs):
@@ -144,20 +148,22 @@ class FaceDetectorYolo(object):
             formatted_res["class"] = 'face'
             formatted_res["prob"] = p
             formatted_res["box"] = {
-                                    "topleft":{'x':x-w/2,'y':y-h/2},
-                                    "bottomright":{'x':x+w/2,'y':y+h/2}
-                                    }
+                "topleft": {'x': x-w/2, 'y': y-h/2},
+                "bottomright": {'x': x+w/2, 'y': y+h/2}
+                }
             out_list.append(formatted_res)
-        return out_list                    
+        return out_list
 
 
 if __name__ == '__main__':
-    import sys, pprint
+    import sys
+    import pprint
 
     detector = FaceDetectorDlib()
     image_url = 'test.png' if len(sys.argv) < 2 else sys.argv[1]
     imgcv = cv2.imread(image_url)
     if imgcv is not None:
+        print(imgcv.shape)
         results = detector.detect(imgcv)
         pprint.pprint(results)
         cv2.imshow('Faces', draw_rects(imgcv, results))

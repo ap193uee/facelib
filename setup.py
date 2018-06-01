@@ -1,23 +1,23 @@
 from setuptools import setup
 
-setup( 
+setup(
     name='face',
-    
-    version='0.13',
+
+    version='1.1.0',
     description='Face detection and recognition',
     url='http://demo.vedalabs.in/',
 
-    # Author details    
+    # Author details
     author='Atinderpal Singh',
     author_email='atinderpalap@gmail.com',
-    
+
     license='Commercial',
 
     packages=['face'],
     package_data={
-        'face':['models/*'],
+        'face': ['models/*'],
     },
-    
-    install_requires=['dlib', 'numpy'],
+
+    install_requires=['numpy'],
     zip_safe=False
     )
