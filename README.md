@@ -26,7 +26,6 @@ sudo apt-get install python-dev python-pip python-opencv python-setuptools #pyth
 pip install --user git+<https-url>
 ```
 
-```
 ### How to use ###
 
     import face, cv2
