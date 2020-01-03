@@ -25,9 +25,7 @@ sudo apt-get install python-dev python-pip python-opencv python-setuptools #pyth
 ```sh
 pip install --user git+<https-url>
 ```
-or
-```sh
-pip install --user git+ssh://git@bitbucket.org/macherlabs/facelib.git
+
 ```
 ### How to use ###
 
